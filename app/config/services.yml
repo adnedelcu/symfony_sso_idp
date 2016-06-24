@@ -63,3 +63,11 @@ services:
             - "@sso_identity_provider.uri_signer"
             - "@session"
             - "@router"
+
+    app.security.logout_success_handler:
+        class: AppBundle\Handler\LogoutSuccessHandler
+        arguments:
+            - "@sso_identity_provider.service_manager"
+            - "@sso_identity_provider.uri_signer"
+            - "@session"
+            - "@router"

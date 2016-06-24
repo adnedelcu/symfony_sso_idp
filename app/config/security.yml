@@ -43,6 +43,8 @@ security:
                 path: _security_logout
                 # The name of the route to redirect to after logging out
                 target: homepage
+                success_handler: app.security.logout_success_handler
+                invalidate_session: true
 
     access_control:
         # the user must be able to access the SSO login page without being logged in

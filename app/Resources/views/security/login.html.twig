@@ -23,7 +23,7 @@
                             <label for="password">{{ 'label.password'|trans }}</label>
                             <input type="password" id="password" name="_password" class="form-control" />
                         </div>
-                        <input type="hidden" name="_target_path" value="{{ app.request.query.get('_target_path') }}" />
+                        <input type="hidden" name="_target_path" value="{{ app.session.get('_security.main.target_path') }}" />
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-sign-in"></i> {{ 'action.sign_in'|trans }}

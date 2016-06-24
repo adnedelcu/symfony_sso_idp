@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use Krtv\SingleSignOn\Model\OneTimePassword;
+use Krtv\Bundle\SingleSignOnIdentityProviderBundle\Entity\OneTimePassword;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -13,14 +13,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/internal/v1/sso")
+ *
  */
 class OtpController extends Controller
 {
     /**
      * Index
      *
-     * @Route("/", name="sso_otp")
+     * @Route("/internal/v1/sso", name="sso_otp")
      * @Method("GET")
      *
      * @param  Request $request
@@ -41,8 +41,6 @@ class OtpController extends Controller
             throw new BadRequestHttpException('Invalid OTP password');
         }
 
-        $otpManager->invalidate($otp);
-
         $response = [
             'data' => [
                 'created_at' => $otp->getCreated()->format('r'),
@@ -51,6 +49,8 @@ class OtpController extends Controller
                 'is_used' => $otp->getUsed(),
             ],
         ];
+
+        $otpManager->invalidate($otp);
 
         return new JsonResponse($response);
     }

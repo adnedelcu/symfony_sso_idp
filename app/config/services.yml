@@ -55,3 +55,11 @@ services:
             # for the service option put the value that will be used
             # in the config.yml at krtv_single_sign_on_identity_provider.services
             - { name: sso.service_provider, service: core_sp }
+
+    app.security.login_success_handler:
+        class: AppBundle\Handler\LoginSuccessHandler
+        arguments:
+            - "@sso_identity_provider.service_manager"
+            - "@sso_identity_provider.uri_signer"
+            - "@session"
+            - "@router"

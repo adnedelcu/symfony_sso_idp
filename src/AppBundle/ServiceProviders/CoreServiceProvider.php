@@ -23,4 +23,9 @@ class CoreServiceProvider implements ServiceProviderInterface
     {
         return 'http://sso-demo.cos/en/logout';
     }
+
+    public function getOTPValidationUrl($parameters = [])
+    {
+        return sprintf($this->getServiceIndexUrl().'otp/validate/?_target_path=%s', $parameters['_target_path']);
+    }
 }

@@ -43,3 +43,15 @@ services:
     #
     # // same code using repository services
     # $posts = $this->get('app.post_repository')->findAll();
+
+    # This is the definition of a Service Provider service
+    app.sso.core:
+        # class that implements \Krtv\Bundle\SingleSignOnIdentityProviderBundle\Manager\ServiceProviderInterface
+        class: AppBundle\ServiceProviders\CoreServiceProvider
+        tags:
+            # the service definition must have this tag
+            # otherwise it will not be recognized by the IdP bundle
+            #
+            # for the service option put the value that will be used
+            # in the config.yml at krtv_single_sign_on_identity_provider.services
+            - { name: sso.service_provider, service: core_sp }

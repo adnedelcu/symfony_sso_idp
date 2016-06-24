@@ -1,3 +1,7 @@
+sso:
+    resource: .
+    type: sso
+
 # These first lines load the all routes defined as @Route() annotations in any
 # controller defined inside the src/AppBundle/Controller/ directory. Controllers
 # are loaded recursively, so you can separate them into subdirectories.
@@ -7,18 +11,21 @@
 app:
     resource: '@AppBundle/Controller/'
     type:     annotation
-    prefix:   /
+    prefix:   /{_locale}
+    requirements:
+        _locale: '%app_locales%'
+    defaults:
+        _locale: '%locale%'
 
 # These lines define a route using YAML configuration. The controller used by
 # the route (FrameworkBundle:Template:template) is a convenient shortcut when
 # the template can be rendered without executing any logic in your own controller.
 # See http://symfony.com/doc/current/cookbook/templating/render_without_controller.html
 homepage:
-    path: /
+    path: /{_locale}
+    requirements:
+        _locale: '%app_locales%'
     defaults:
         _controller: FrameworkBundle:Template:template
         template:    default/homepage.html.twig
-
-sso:
-    resource: .
-    type:     sso
+        _locale:     '%locale%'

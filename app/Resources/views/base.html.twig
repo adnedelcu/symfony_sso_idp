@@ -7,6 +7,7 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <title>{% block title %}Symfony Demo application{% endblock %}</title>
 
         {% block stylesheets %}
@@ -35,7 +36,7 @@
                     <div class="container">
                         <div class="navbar-header">
                             <a class="navbar-brand" href="{{ path('homepage') }}">
-                                Symfony TEST
+                                Symfony Demo
                             </a>
 
                             <button type="button" class="navbar-toggle"
@@ -68,7 +69,7 @@
 
                                 {% if app.user %}
                                     <li>
-                                        <a href="{{ path('security_logout') }}">
+                                        <a href="{{ path('_security_logout') }}">
                                             <i class="fa fa-sign-out"></i> {{ 'menu.logout'|trans }}
                                         </a>
                                     </li>
@@ -90,7 +91,6 @@
         {% endblock %}
 
         <div class="container body-container">
-            TEST
             {% block body %}
                 <div class="row">
                     <div id="main" class="col-sm-9">
@@ -114,10 +114,10 @@
 
         {% block footer %}
             <footer>
-                TEST
                 <div class="container">
                     <div class="row">
                         <div id="footer-copyright" class="col-md-6">
+                            <p>&copy; {{ 'now'|date('Y') }} - The Symfony Project</p>
                             <p>{{ 'mit_license'|trans }}</p>
                         </div>
                         <div id="footer-resources" class="col-md-6">
@@ -148,5 +148,9 @@
             <script src="{{ asset('js/app.js') }}"></script>
         {% endblock %}
 
+        {# it's not mandatory to set the timezone in localizeddate(). This is done to
+           avoid errors when the 'intl' PHP extension is not available and the application
+           is forced to use the limited "intl polyfill", which only supports UTC and GMT #}
+        <!-- Page rendered on {{ 'now'|localizeddate('long', 'long', null, 'UTC') }} -->
     </body>
 </html>

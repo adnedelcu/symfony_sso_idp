@@ -23,6 +23,7 @@
                             <label for="password">{{ 'label.password'|trans }}</label>
                             <input type="password" id="password" name="_password" class="form-control" />
                         </div>
+                        <input type="hidden" name="_target_path" value="{{ app.request.query.get('_target_path') }}" />
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-sign-in"></i> {{ 'action.sign_in'|trans }}
@@ -66,14 +67,14 @@
                         <span class="label label-success">{{ 'note'|trans }}</span>
                         {{ 'help.reload_fixtures'|trans }}<br/>
 
-                        <code class="console">$ php app/console doctrine:fixtures:load</code>
+                        <code class="console">$ php bin/console doctrine:fixtures:load</code>
                     </p>
 
                     <p>
                         <span class="label label-success">{{ 'tip'|trans }}</span>
                         {{ 'help.add_user'|trans }}<br/>
 
-                        <code class="console">$ php app/console app:add-user</code>
+                        <code class="console">$ php bin/console app:add-user</code>
                     </p>
                 </div>
             </div>

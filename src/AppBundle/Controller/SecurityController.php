@@ -30,9 +30,6 @@ class SecurityController extends Controller
      */
     public function loginAction()
     {
-        $logger = $this->get('logger');
-        $logger->info('Entered loginAction');
-
         $helper = $this->get('security.authentication_utils');
 
         return $this->render('security/login.html.twig', array(
@@ -53,9 +50,6 @@ class SecurityController extends Controller
      */
     public function loginCheckAction()
     {
-        $logger = $this->get('logger');
-        $logger->info('Entered loginCheckAction');
-
         throw new \Exception('This should never be reached!');
     }
 
@@ -65,7 +59,7 @@ class SecurityController extends Controller
      * But, this will never be executed. Symfony will intercept this first
      * and handle the logout automatically. See logout in app/config/security.yml
      *
-     * @Route("/logout", name="security_logout")
+     * @Route("/logout", name="_security_logout")
      */
     public function logoutAction()
     {

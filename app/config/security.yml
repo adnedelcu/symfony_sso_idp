@@ -4,6 +4,10 @@ security:
         # http://symfony.com/doc/current/book/security.html#encoding-the-user-s-password
         AppBundle\Entity\User: bcrypt
 
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+        ROLE_SUPER_ADMIN: [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
+
     providers:
         # in this example, users are stored via Doctrine in the database
         # To see the users at src/AppBundle/DataFixtures/ORM/LoadFixtures.php
@@ -15,7 +19,7 @@ security:
     firewalls:
         secured_area:
             # this firewall applies to all URLs
-            pattern: ^/admin
+            pattern: ^/
 
             # but the firewall does not require login on every page
             # denying access is done in access_control or in your controllers
@@ -35,9 +39,13 @@ security:
 
             logout:
                 # The route name the user can go to in order to logout
-                path: security_logout
+                path: _security_logout
                 # The name of the route to redirect to after logging out
                 target: homepage
 
     access_control:
-        - { path: ^/sso/login$, roles: [ROLE_USER, IS_AUTHENTICATED_FULLY] }
+        # the user must be able to access the SSO login page without being logged in
+        - { path: ^/sso/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # this is a catch-all for the admin area
+        # additional security lives in the controllers
+        - { path: ^/admin, roles: ROLE_ADMIN }

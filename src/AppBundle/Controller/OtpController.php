@@ -2,10 +2,13 @@
 
 namespace AppBundle\Controller;
 
+use Krtv\SingleSignOn\Model\OneTimePassword;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -33,6 +36,12 @@ class OtpController extends Controller
 
         /** @var \Krtv\SingleSignOn\Model\OneTimePasswordInterface */
         $otp = $otpManager->get($pass);
+
+        if (!($otp instanceof OneTimePassword) || $otp->getUsed() === true) {
+            throw new BadRequestHttpException('Invalid OTP password');
+        }
+
+        $otpManager->invalidate($otp);
 
         $response = [
             'data' => [

@@ -71,3 +71,15 @@ services:
             - "@sso_identity_provider.uri_signer"
             - "@session"
             - "@router"
+
+    app.lock_manager_factory:
+        class: AppBundle\Manager\LockManagerFactory
+        arguments:
+            - "@snc_redis.default"
+
+    app.lock_manager:
+        class: AppBundle\Manager\LockManager
+        arguments:
+            - "@app.lock_manager_factory"
+        calls:
+            - [ setLogger, [ "@logger" ] ]

@@ -108,3 +108,10 @@ krtv_single_sign_on_identity_provider:
 
     otp_parameter: _otp         # otp parameter name
     secret_parameter: secret    # secret parameter name
+
+snc_redis:
+    clients:
+        default:
+            type: predis
+            alias: default
+            dsn: redis://localhost

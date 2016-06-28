@@ -25,6 +25,7 @@ class AppKernel extends Kernel
             new AppBundle\AppBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             new Krtv\Bundle\SingleSignOnIdentityProviderBundle\KrtvSingleSignOnIdentityProviderBundle(),
+            new Snc\RedisBundle\SncRedisBundle(),
         );
 
         // Some bundles are only used while developing the application or during

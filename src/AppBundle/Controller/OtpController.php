@@ -2,6 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use Everlution\Redlock\Model\Lock;
+use Everlution\Redlock\Model\LockType;
+
 use Krtv\Bundle\SingleSignOnIdentityProviderBundle\Entity\OneTimePassword;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -29,28 +32,47 @@ class OtpController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $lockManagerService = $this->get('app.lock_manager');
+        $lockManager = $lockManagerService->getLockManager();
+        $lock = null;
+
         /** @var \Krtv\SingleSignOn\Manager\OneTimePasswordManagerInterface */
         $otpManager = $this->get('sso_identity_provider.otp_manager');
 
-        $pass = str_replace(' ', '+', $request->query->get('_otp'));
+        $password = str_replace(' ', '+', $request->query->get('_otp'));
 
-        /** @var \Krtv\SingleSignOn\Model\OneTimePasswordInterface */
-        $otp = $otpManager->get($pass);
+        try {
+            $lock = $lockManagerService->lockOrWait($lockManager, LockType::EXCLUSIVE, sprintf('otp_%d', $password), 10);
 
-        if (!($otp instanceof OneTimePassword) || $otp->getUsed() === true) {
-            throw new BadRequestHttpException('Invalid OTP password');
+            if ($lock === null) {
+                throw new \Exception(sprintf('Can\'t acquire lock after 10 attempts for OTP %d.', $password));
+            }
+
+            $otp = $otpManager->get($password);
+
+            if (!($otp instanceof OneTimePassword) || $otp->getUsed() === true) {
+                throw new BadRequestHttpException('Invalid OTP password');
+            }
+
+            $response = [
+                'data' => [
+                    'created_at' => $otp->getCreated()->format('r'),
+                    'hash' => $otp->getHash(),
+                    'password' => $otp->getPassword(),
+                    'is_used' => $otp->getUsed(),
+                ],
+            ];
+
+            $otpManager->invalidate($otp);
+            $lockManager->releaseLock($lock);
+            $lock = null;
+        } catch (\Exception $e) {
+            throw $e;
+        } finally {
+            if ($lock instanceof Lock) {
+                $lockManager->releaseLock($lock);
+            }
         }
-
-        $response = [
-            'data' => [
-                'created_at' => $otp->getCreated()->format('r'),
-                'hash' => $otp->getHash(),
-                'password' => $otp->getPassword(),
-                'is_used' => $otp->getUsed(),
-            ],
-        ];
-
-        $otpManager->invalidate($otp);
 
         return new JsonResponse($response);
     }
